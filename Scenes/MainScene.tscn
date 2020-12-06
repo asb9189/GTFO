@@ -3,11 +3,11 @@
 [ext_resource path="res://Scenes/ZombieScene.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scenes/PlayerScene.tscn" type="PackedScene" id=2]
 
-[node name="Node2D" type="Node2D"]
+[node name="Scene" type="Node2D"]
 
 [node name="Zombie" parent="." instance=ExtResource( 1 )]
 position = Vector2( 319.54, 210.224 )
-scale = Vector2( 1.81849, 1.86748 )
+scale = Vector2( 1.19528, 1.22748 )
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 508.249, 215.454 )

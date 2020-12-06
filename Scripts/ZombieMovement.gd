@@ -1,6 +1,7 @@
 extends KinematicBody2D
 
 var speed = 250
+var health = 3;
 var player_ref
 
 func _ready():
@@ -8,7 +9,11 @@ func _ready():
 
 
 func _process(delta):
-	var dir = (player_ref.position - self.position).normalized() * speed
-	move_and_slide(dir)
 	
+	if (health <= 0):
+		queue_free()
+	
+	var dir = (player_ref.position - self.position).normalized() * speed
+	rotation = (player_ref.position - position).angle()
+	move_and_slide(dir)
 	
