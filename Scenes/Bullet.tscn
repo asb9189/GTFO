@@ -1,0 +1,7 @@
+[gd_scene format=2]
+
+[node name="Area2D" type="Area2D"]
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 66.4251, 17.8953 )
+scale = Vector2( 0.239998, 0.239998 )
