@@ -1,7 +1,7 @@
 extends KinematicBody2D
 
-#preloading
-onready var bulletScene = preload("res://Scenes/BulletScene.tscn")
+#raycast
+onready var ray = $RayCast2D
 
 #bullet timer
 var timer
@@ -17,10 +17,14 @@ var currentClipAmmo = 8
 
 #movement
 var velocity = Vector2()
-export (int) var speed = 400;
+export (int) var speed = 400
 
 #ammo UI
 var ammo_ui
+
+#weapon stats
+var currentWeapon = 1
+var currentWeaponDamage = 1
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -71,11 +75,8 @@ func update_ammo_ui():
 	ammo_ui.set_text(str(currentClipAmmo) + "/" + str(currentAmmo))
 
 func fire_bullet():
-	var direction = (get_global_mouse_position() - global_position).normalized()
-	var bullet = bulletScene.instance()
-	bullet.init(direction)
-	bullet.set_global_position(position)
-	get_parent().add_child(bullet)
+	if (ray.is_colliding() and ray.get_collider().is_in_group("Enemy")):
+		ray.get_collider().take_damage(currentWeaponDamage)
 	canShoot = false
 	currentClipAmmo -= 1
 	update_ammo_ui()

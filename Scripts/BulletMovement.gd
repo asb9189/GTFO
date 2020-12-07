@@ -1,15 +1,18 @@
 extends Area2D
 
-var speed = 50
+var speed = 10
 var movement = Vector2()
 var mouse_pos
 var dir
 var room_width
 var room_height
 
+#Bullet has been created
 func init(dir):
+	self.add_to_group("Bullet")
 	self.dir = dir
 	
+#Bullet has been placed into the scene
 func _ready():
 	room_width = get_viewport().size.x
 	room_height = get_viewport().size.y
