@@ -1,17 +1,48 @@
 extends KinematicBody2D
 
+#preloading
+onready var bulletScene = preload("res://Scenes/BulletScene.tscn")
+
+#bullet timer
+var timer
+var canShoot = true
+
+#ammo
+var maxAmmo = 32
+var currentAmmo = 32
+
+#ammo (clip)
+var maxClipAmmo = 8
+var currentClipAmmo = 8
+
+#movement
 var velocity = Vector2()
 export (int) var speed = 400;
-onready var bulletScene = preload("res://Scenes/BulletScene.tscn")
+
+#ammo UI
+var ammo_ui
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED) #project settings to disable mouse visuals
-	pass
 	
+	#project settings to disable mouse visuals
+	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)
+	
+	#get the timer
+	timer = $"Timer"
+	print(timer)
+	timer.connect("timeout", self, "_on_timer_timeout")
+	
+	#set the UI
+	ammo_ui = get_parent().get_node("ammo")
+	ammo_ui.set_text(str(maxClipAmmo) + "/" + str(maxAmmo))
+	
+func _on_timer_timeout():
+	canShoot = true
 
 func get_input():
 	velocity = Vector2()
+	var canReload = true
 	if Input.is_action_pressed('ui_right'):
 		velocity.x += 1
 	if Input.is_action_pressed('ui_left'):
@@ -21,14 +52,34 @@ func get_input():
 	if Input.is_action_pressed('ui_up'):
 		velocity.y -= 1
 	if Input.is_action_just_released("mouse_left"):
-		var direction = (get_global_mouse_position() - global_position).normalized()
-		var bullet = bulletScene.instance()
-		bullet.init(direction)
-		bullet.set_global_position(position)
-		get_parent().add_child(bullet)
-		
-		
+		if (canShoot and currentClipAmmo > 0):
+			fire_bullet()
+			canReload = false
+	if Input.is_action_just_pressed("reload"):
+		if (canReload):
+			reload()
 	velocity = velocity.normalized() * speed
+	
+func reload():
+	if (currentAmmo > 0 and currentClipAmmo < maxClipAmmo):
+		while(currentAmmo > 0 and currentClipAmmo != maxClipAmmo):
+			currentClipAmmo += 1
+			currentAmmo -= 1
+	update_ammo_ui()
+	
+func update_ammo_ui():
+	ammo_ui.set_text(str(currentClipAmmo) + "/" + str(currentAmmo))
+
+func fire_bullet():
+	var direction = (get_global_mouse_position() - global_position).normalized()
+	var bullet = bulletScene.instance()
+	bullet.init(direction)
+	bullet.set_global_position(position)
+	get_parent().add_child(bullet)
+	canShoot = false
+	currentClipAmmo -= 1
+	update_ammo_ui()
+	timer.start()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):

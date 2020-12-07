@@ -21,3 +21,6 @@ texture = ExtResource( 2 )
 position = Vector2( -2.80615, 3.74153 )
 scale = Vector2( 2.08889, 2.08889 )
 shape = SubResource( 1 )
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.15
