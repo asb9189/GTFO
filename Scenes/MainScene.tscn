@@ -4,11 +4,11 @@
 [ext_resource path="res://Scenes/PlayerScene.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Fonts/Gugi-Regular.ttf" type="DynamicFontData" id=3]
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="DynamicFont" id=1]
 size = 64
 font_data = ExtResource( 3 )
 
-[sub_resource type="TileSet" id=1]
+[sub_resource type="TileSet" id=2]
 
 [node name="Scene" type="Node2D"]
 
@@ -17,7 +17,7 @@ margin_left = 824.0
 margin_top = 522.0
 margin_right = 1011.0
 margin_bottom = 595.0
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 1 )
 text = "8/32"
 align = 1
 valign = 1
@@ -26,12 +26,12 @@ __meta__ = {
 }
 
 [node name="Zombie" parent="." instance=ExtResource( 1 )]
-position = Vector2( 319.54, 210.224 )
+position = Vector2( -104.939, 275.631 )
 scale = Vector2( 1.19528, 1.22748 )
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 508.249, 215.454 )
 
 [node name="TileMap" type="TileMap" parent="."]
-tile_set = SubResource( 1 )
+tile_set = SubResource( 2 )
 format = 1
