@@ -19,12 +19,16 @@ var currentClipAmmo = 8
 var velocity = Vector2()
 export (int) var speed = 400
 
-#ammo UI
+#UI
 var ammo_ui
+var points_ui
 
 #weapon stats
 var currentWeapon = 1
 var currentWeaponDamage = 1
+
+#points
+var points
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -39,9 +43,15 @@ func _ready():
 	timer = $Timer
 	timer.connect("timeout", self, "_on_timer_timeout")
 	
+	#setup player's points
+	points = 0
+	
 	#set the UI
 	ammo_ui = get_parent().get_node("ammo")
 	ammo_ui.set_text(str(maxClipAmmo) + "/" + str(maxAmmo))
+	
+	points_ui = get_parent().get_node("points")
+	points_ui.set_text(str(points))
 	
 func _on_timer_timeout():
 	canShoot = true
@@ -75,13 +85,18 @@ func reload():
 	
 func update_ammo_ui():
 	ammo_ui.set_text(str(currentClipAmmo) + "/" + str(currentAmmo))
-
+	
+func update_points_ui():
+	points_ui.set_text(str(points))
+	
 func fire_bullet():
 	if (ray.is_colliding() and ray.get_collider().is_in_group("Enemy")):
 		ray.get_collider().take_damage(currentWeaponDamage)
+		points += 50
 	canShoot = false
 	currentClipAmmo -= 1
 	update_ammo_ui()
+	update_points_ui()
 	timer.start()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

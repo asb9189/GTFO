@@ -1,6 +1,8 @@
 extends KinematicBody2D
 
 enum State {RECONNAISANCE, BREAKING_WALL, PURSUING, ATTACKING}
+onready var animation_player = get_node("/root/Scene/BloodAnimations")
+onready var game_manager = get_parent().get_node("GameManager")
 
 var state
 var speed = 250
@@ -8,11 +10,12 @@ var health = 3;
 var player_ref
 var wall_ref
 var animation_playing = false
-onready var animation_player = get_node("/root/Scene/BloodAnimations")
 
 func _ready():
 	self.add_to_group("Enemy")
 	state = State.RECONNAISANCE
+	
+	set_speed()
 	
 	#get closest window to me
 	set_nearest_wall()
@@ -20,6 +23,10 @@ func _ready():
 func change_state():
 	if (state == State.RECONNAISANCE):
 		state = State.BREAKING_WALL
+func set_speed():
+	var generator = RandomNumberGenerator.new()
+	generator.randomize()
+	speed = generator.randi_range(150, 280)
 	
 func set_nearest_wall():
 	var walls = get_tree().get_nodes_in_group("Wall")
@@ -61,6 +68,7 @@ func take_damage(damage):
 		animation_player.visible = true
 		animation_player.play()
 		animation_player.visible = false
+		game_manager.zombieCount -= 1
 		queue_free()
 	else:
 		if (not animation_playing):
