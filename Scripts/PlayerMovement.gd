@@ -32,9 +32,11 @@ func _ready():
 	#project settings to disable mouse visuals
 	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)
 	
+	#Add to player group
+	add_to_group("Player")
+	
 	#get the timer
-	timer = $"Timer"
-	print(timer)
+	timer = $Timer
 	timer.connect("timeout", self, "_on_timer_timeout")
 	
 	#set the UI
@@ -87,3 +89,8 @@ func _process(delta):
 	get_input()
 	rotation = (get_global_mouse_position() - global_position).angle()
 	velocity = move_and_slide(velocity)
+
+
+func _on_Area2D_area_entered(area):
+	if (area.get_parent().is_in_group("Wall")):
+		pass
