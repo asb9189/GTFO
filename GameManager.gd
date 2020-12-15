@@ -15,13 +15,19 @@ const max_horde_size = 20
 var spawners
 var timer
 
+#helper
 var timerStarted
+
+#UI
+var wave_ui
 
 func _ready():
 	timer = $Timer
+	wave_ui = get_parent().get_node("wave")
 	timer.wait_time = 5
 	spawners = get_tree().get_nodes_in_group("Spawner")
 	wave = 1
+	wave_ui.set_text(str(wave))
 	state = State.GAME_START
 	timerStarted = false
 	timer.connect("timeout", self, "_on_timer_timeout")
@@ -34,6 +40,7 @@ func _process(delta):
 		if (zombieCount == 0):
 			print("Wave Over")
 			wave += 1
+			wave_ui.set_text(str(wave))
 			state = State.OUT_WAVE
 	elif (state == State.OUT_WAVE and not timerStarted):
 		timer.start()
