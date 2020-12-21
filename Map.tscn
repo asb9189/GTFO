@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="NavigationPolygon" id=1]
+
+[node name="Map" type="Node2D"]
+position = Vector2( -6.67419, 0 )
+
+[node name="Navigation2D" type="Navigation2D" parent="."]
+
+[node name="NavigationPolygonInstance" type="NavigationPolygonInstance" parent="Navigation2D"]
+position = Vector2( 7.07111, 5.65686 )
+navpoly = SubResource( 1 )
