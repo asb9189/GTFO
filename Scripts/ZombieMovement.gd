@@ -2,6 +2,7 @@ extends KinematicBody2D
 
 enum State {RECONNAISANCE, BREAKING_WALL, PURSUING, ATTACKING}
 onready var animation_player = get_node("/root/Scene/BloodAnimations")
+onready var map = get_node("/root/Scene/Map")
 onready var game_manager = get_parent().get_node("GameManager")
 
 var state
@@ -12,9 +13,11 @@ var wall_ref
 var animation_playing = false
 
 func _ready():
+	print(map)
 	self.add_to_group("Enemy")
 	state = State.RECONNAISANCE
 	
+	#set rand speed for each zombie spawned
 	set_speed()
 	
 	#get closest window to me
@@ -23,6 +26,7 @@ func _ready():
 func change_state():
 	if (state == State.RECONNAISANCE):
 		state = State.BREAKING_WALL
+	
 func set_speed():
 	var generator = RandomNumberGenerator.new()
 	generator.randomize()
@@ -55,9 +59,11 @@ func _process(delta):
 		state = State.PURSUING
 	elif (state == State.PURSUING):
 		#print("hunting player")
-		var dir = (player_ref.position - position).normalized() * speed
+		#var dir = (player_ref.position - position).normalized() * speed
+		var path = map.get_simple_path(global_position, player_ref.global_position)
 		rotation = (player_ref.position - position).angle()
-		move_and_slide(dir)
+		move_along_path(path, speed * delta)
+		#move_and_slide(dir)
 	elif (state == State.ATTACKING):
 		pass
 	
@@ -87,3 +93,20 @@ func _on_BloodAnimations_animation_finished():
 func _on_Area2D_area_entered(area):
 	if (area.get_parent().is_in_group("Wall")):
 		change_state()
+	
+func move_along_path(path, dist):
+	
+	#go through points in path array
+	#and move character towards that point
+	var start_point = position
+	for i in range(path.size()):
+		var distance_to_next = start_point.distance_to(path[0])
+		if (dist <= distance_to_next and dist >= 0.0):
+			position = start_point.linear_interpolate(path[0], dist / distance_to_next)
+			break
+		elif dist < 0.0:
+			position = path[0]
+			break
+		dist -= distance_to_next
+		start_point = path[0]
+		path.remove(0)

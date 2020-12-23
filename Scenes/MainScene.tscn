@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=2]
+[gd_scene load_steps=33 format=2]
 
 [ext_resource path="res://Scenes/ZombieSpawner.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scenes/PlayerScene.tscn" type="PackedScene" id=2]
@@ -23,7 +23,7 @@
 [ext_resource path="res://SpecialEffects/splash-1/02.png" type="Texture" id=21]
 [ext_resource path="res://SpecialEffects/splash-1/05.png" type="Texture" id=22]
 [ext_resource path="res://SpecialEffects/splash-1/01.png" type="Texture" id=23]
-[ext_resource path="res://Map.tscn" type="PackedScene" id=24]
+[ext_resource path="res://Tiles/zombie_map.png" type="Texture" id=24]
 [ext_resource path="res://Scenes/Wall.tscn" type="PackedScene" id=25]
 [ext_resource path="res://Scenes/GameManager.tscn" type="PackedScene" id=26]
 
@@ -50,6 +50,11 @@ animations = [ {
 "name": "default",
 "speed": 60.0
 } ]
+
+[sub_resource type="NavigationPolygon" id=6]
+vertices = PoolVector2Array( 771.883, 42.8674, 776.929, 755.107, 628.931, 753.425, 629.05, 552.256, 263.141, 44.5492, 263.141, 238.796, 263.043, 552.256, 261.783, 374.607, 6.64929, 372.088, 4.75941, 239.166 )
+polygons = [ PoolIntArray( 0, 1, 2, 3 ), PoolIntArray( 4, 0, 3, 5 ), PoolIntArray( 5, 3, 6, 7 ), PoolIntArray( 8, 9, 5, 7 ) ]
+outlines = [ PoolVector2Array( 4.75941, 239.166, 6.64929, 372.088, 261.783, 374.607, 263.043, 552.256, 629.05, 552.256, 628.931, 753.425, 776.929, 755.107, 771.883, 42.8674, 263.141, 44.5492, 263.141, 238.796 ) ]
 
 [node name="Scene" type="Node2D"]
 
@@ -103,19 +108,19 @@ __meta__ = {
 }
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
-position = Vector2( 835.68, 294.806 )
+position = Vector2( 512.544, 294.806 )
 
 [node name="Wall" parent="." instance=ExtResource( 25 )]
-position = Vector2( 553.903, 302.084 )
+position = Vector2( 248.543, 306.522 )
+
+[node name="Wall2" parent="." instance=ExtResource( 25 )]
+position = Vector2( 704.694, 565.608 )
 
 [node name="ZombieSpawner" parent="." instance=ExtResource( 1 )]
-position = Vector2( 54.7285, 290.995 )
+position = Vector2( -112.149, 303.723 )
 
 [node name="ZombieSpawner2" parent="." instance=ExtResource( 1 )]
-position = Vector2( 54.7285, 446.995 )
-
-[node name="ZombieSpawner3" parent="." instance=ExtResource( 1 )]
-position = Vector2( 54.7285, 144.995 )
+position = Vector2( 708.095, 731.252 )
 
 [node name="GameManager" parent="." instance=ExtResource( 26 )]
 
@@ -125,5 +130,21 @@ scale = Vector2( 0.76, 0.76 )
 frames = SubResource( 5 )
 speed_scale = 1.5
 
-[node name="Map" parent="." instance=ExtResource( 24 )]
+[node name="Map" type="Navigation2D" parent="."]
+
+[node name="NavigationPolygonInstance" type="NavigationPolygonInstance" parent="Map"]
+navpoly = SubResource( 6 )
+
+[node name="Sprite" type="Sprite" parent="Map/NavigationPolygonInstance"]
+position = Vector2( 517.992, 297.677 )
+scale = Vector2( 0.84, 0.84 )
 z_index = -100
+texture = ExtResource( 24 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Map/NavigationPolygonInstance/Sprite"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Map/NavigationPolygonInstance/Sprite/StaticBody2D"]
+polygon = PoolVector2Array( -338.414, -71.4726, -304.704, -70.9107, -305.107, -304.702, 303.654, -303.286, 306.485, 338.744, 338.339, 338.744, 338.339, -337.263, -337.668, -337.263 )
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="Map/NavigationPolygonInstance/Sprite/StaticBody2D"]
+polygon = PoolVector2Array( -338.56, 91.2011, -305.822, 91.2011, -305.822, 305.003, 131.137, 304.335, 131.137, 338.41, -337.892, 338.41 )
